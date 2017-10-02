@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { Form, Icon, Input, Button, Checkbox } from 'antd';
+import { Form, Icon, Input, Button, notification } from 'antd';
+import axios from 'axios';
 import './styles.css';
 
 const { Item: FormItem } = Form;
@@ -11,6 +12,31 @@ class LoginForm extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
+        axios.post('/csfilter/api/login', {
+          username: values.username,
+          password: values.password
+        })
+          .then(function (response) {
+            console.log(response);
+            notification.success({
+              message: 'Success',
+              description: response.data.message,
+              style: {
+                width: 600,
+                marginLeft: 335 - 600,
+              },
+            });
+          })
+          .catch(function (error) {
+            notification.warn({
+              message: 'Error - try again',
+              description: error.data.message,
+              style: {
+                width: 600,
+                marginLeft: 335 - 600,
+              },
+            });
+          });
       }
     });
   }
@@ -19,7 +45,7 @@ class LoginForm extends React.Component {
     return (
       <Form onSubmit={this.handleSubmit} className="login-form">
         <FormItem>
-          {getFieldDecorator('userName', {
+          {getFieldDecorator('username', {
             rules: [{ required: true, message: 'Please input your username!' }],
           })(
             <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="Username" />

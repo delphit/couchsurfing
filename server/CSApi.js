@@ -10,7 +10,7 @@ class CouchsurfingAPI {
     this.loggedIn = false;
 
     if (username === undefined || password === undefined) {
-      throw new Error('Username and password should not be undefined');
+      throw new Error('Username and password should be not undefined');
     }
 
     this.password = password;
@@ -63,6 +63,7 @@ class CouchsurfingAPI {
       this.userID = sessionUser.id;
       this.accessToken = sessionUser.accessToken;
       this.loggedIn = true;
+      return loginRes;
     } else {
       throw new Error('User already logged in');
     }

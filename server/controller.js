@@ -7,9 +7,9 @@ module.exports = {
     const { username, password } = req.body;
 
     CouchsurfingApiInstance = new CouchsurfingAPI(username, password);
-    await CouchsurfingApiInstance._login();
+    const a = await CouchsurfingApiInstance._login();
 
-    res.send({ message: 'user successfully logged in' });
+    res.send({ message: 'User successfully logged in', a});
   },
 
   getSelfProfile: async function getSelfProfile(req, res) {

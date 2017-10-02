@@ -2,8 +2,12 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:3010/",
+  "https-proxy": "http://localhost:3010/",
+  "strict-ssl": false,
   "dependencies": {
     "antd": "^2.13.2",
+    "axios": "^0.16.2",
     "prettier": "^1.7.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
@@ -14,6 +18,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build"
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
   }
 }
