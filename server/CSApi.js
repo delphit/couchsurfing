@@ -48,22 +48,31 @@ class CouchsurfingAPI {
         'Accept-Language': 'en;q=1',
         'Content-Type': 'application/json; charset=utf-8',
         'User-Agent':
-          'Dalvik/2.1.0 (Linux; U; Android 5.0.1; Android SDK built for x86 Build/LSX66B) Couchsurfing/android/20141121013910661/Couchsurfing/3.0.1/ee6a1da'
+        'Dalvik/2.1.0 (Linux; U; Android 5.0.1; Android SDK built for x86 Build/LSX66B) Couchsurfing/android/20141121013910661/Couchsurfing/3.0.1/ee6a1da'
       };
 
-      const loginRes = await axios({
+      return await axios({
         method: 'post',
         url: `${CS_URL}/api/v3/sessions`,
         data: JSON.stringify(loginPayload),
         headers: this.headers
-      });
-
-      const { sessionUser } = loginRes.data;
-
-      this.userID = sessionUser.id;
-      this.accessToken = sessionUser.accessToken;
-      this.loggedIn = true;
-      return loginRes;
+      })
+        .then((e) => {
+          const { sessionUser } = e.data;
+          this.userID = sessionUser.id;
+          this.accessToken = sessionUser.accessToken;
+          this.loggedIn = true;
+          return {
+            status: 200,
+            message: 'User successfully logged in'
+          };
+        })
+        .catch(() => {
+          return {
+            status: 301,
+            message: 'Wrong password'
+          }
+        });
     } else {
       throw new Error('User already logged in');
     }

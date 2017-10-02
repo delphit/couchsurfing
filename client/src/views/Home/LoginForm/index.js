@@ -11,13 +11,11 @@ class LoginForm extends React.Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
         axios.post('/csfilter/api/login', {
           username: values.username,
           password: values.password
         })
           .then(function (response) {
-            console.log(response);
             notification.success({
               message: 'Success',
               description: response.data.message,
@@ -30,7 +28,7 @@ class LoginForm extends React.Component {
           .catch(function (error) {
             notification.warn({
               message: 'Error - try again',
-              description: error.data.message,
+              description: error.response.data.message,
               style: {
                 width: 600,
                 marginLeft: 335 - 600,
