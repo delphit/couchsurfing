@@ -1,12 +1,17 @@
 import React from 'react';
 
 import { Form, Icon, Input, Button, notification } from 'antd';
+import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import './styles.css';
 
 const { Item: FormItem } = Form;
 
 class LoginForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { redirect: false };
+  }
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
@@ -15,7 +20,7 @@ class LoginForm extends React.Component {
           username: values.username,
           password: values.password
         })
-          .then(function (response) {
+          .then((response) => {
             notification.success({
               message: 'Success',
               description: response.data.message,
@@ -24,8 +29,9 @@ class LoginForm extends React.Component {
                 marginLeft: 335 - 600,
               },
             });
+            this.setState({ redirect: true });
           })
-          .catch(function (error) {
+          .catch((error) => {
             notification.warn({
               message: 'Error - try again',
               description: error.response.data.message,
@@ -39,7 +45,12 @@ class LoginForm extends React.Component {
     });
   }
   render() {
+    const { redirect } = this.state;
     const { getFieldDecorator } = this.props.form;
+
+    if (redirect) {
+      return <Redirect to='/find' />;
+    }
     return (
       <Form onSubmit={this.handleSubmit} className="login-form">
         <FormItem>

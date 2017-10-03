@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const utf8 = require('utf8');
 const axios = require('axios');
+const io = require('socket.io')();
 
 const CS_URL = 'https://hapi.couchsurfing.com';
 const PRIVATE_KEY = 'v3#!R3v44y3ZsJykkb$E@CG#XreXeGCh';
@@ -33,12 +34,12 @@ class CouchsurfingAPI {
     if (this.loggedIn !== true) {
       const loginPayload = {
         actionType: 'manual_login',
-        credentials: { authToken: this.password, email: this.username }
+        credentials: { authToken: this.password, email: this.username },
       };
 
       const signature = CouchsurfingAPI._getUrlSignature(
         PRIVATE_KEY,
-        '/api/v3/sessions' + JSON.stringify(loginPayload)
+        '/api/v3/sessions' + JSON.stringify(loginPayload),
       );
 
       this.headers = {
@@ -48,52 +49,52 @@ class CouchsurfingAPI {
         'Accept-Language': 'en;q=1',
         'Content-Type': 'application/json; charset=utf-8',
         'User-Agent':
-        'Dalvik/2.1.0 (Linux; U; Android 5.0.1; Android SDK built for x86 Build/LSX66B) Couchsurfing/android/20141121013910661/Couchsurfing/3.0.1/ee6a1da'
+          'Dalvik/2.1.0 (Linux; U; Android 5.0.1; Android SDK built for x86 Build/LSX66B) Couchsurfing/android/20141121013910661/Couchsurfing/3.0.1/ee6a1da',
       };
 
       return await axios({
         method: 'post',
         url: `${CS_URL}/api/v3/sessions`,
         data: JSON.stringify(loginPayload),
-        headers: this.headers
+        headers: this.headers,
       })
-        .then((e) => {
+        .then(e => {
           const { sessionUser } = e.data;
           this.userID = sessionUser.id;
           this.accessToken = sessionUser.accessToken;
           this.loggedIn = true;
           return {
             status: 200,
-            message: 'User successfully logged in'
+            message: 'User successfully logged in',
           };
         })
         .catch(() => {
           return {
             status: 301,
-            message: 'Wrong password'
-          }
+            message: 'Wrong password',
+          };
         });
     } else {
       throw new Error('User already logged in');
     }
   }
 
-  async apiRequest(path) {
+  async apiRequest(path, method = 'get', data) {
     const signature = CouchsurfingAPI._getUrlSignature(
       `${PRIVATE_KEY}.${this.userID}`,
-      path
+      path,
     );
 
     this.headers = Object.assign({}, this.headers, {
       'X-CS-Url-Signature': signature,
-      'X-Access-Token': this.accessToken
+      'X-Access-Token': this.accessToken,
     });
 
     const dataResponse = await axios({
-      method: 'get',
+      method,
       url: `${CS_URL}${path}`,
-      headers: this.headers
-    });
+      headers: this.headers,
+    }, data);
 
     return dataResponse.data;
   }
@@ -114,6 +115,19 @@ class CouchsurfingAPI {
     const path = `/api/v3/users/${userID}/references?perPage=999999&relationshipType=${type}&includeReferenceMeta=true`;
 
     return this.apiRequest(path);
+  }
+
+  sendMessage(userID = this.userID, title, message) {
+    const path = `/api/v2.1/users/${userID}/conversations/`;
+    const data = {
+      title,
+      message
+    };
+
+
+return 'a';
+
+    // return this.apiRequest(path, "post", data);
   }
 }
 
