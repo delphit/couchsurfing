@@ -16,15 +16,24 @@ module.exports = {
     const data = await CouchsurfingApiInstance.getSelfProfile();
 
     res.send({ data });
+    return CouchsurfingApiInstance;
   },
 
-  sendMessage: async function sendMessage(req, res) {
-    const { title, message } = req.body;
+  getHostsList: async function getHostsList(req, res) {
+    const { address, minGuestsWelcome } = req.body;
+    const params = {
+      // page: 1,
+      perPage: 25,
+      placeDescription: address,
+      radius: 10,
+      sort: 'best_match',
+      couchStatus: 'yes,maybe',
+      minGuestsWelcome: minGuestsWelcome,
+    };
 
-    io.on('connection', client => {
-      client.on('subscribeToTimer', interval => {
-        client.broadcast.emit('timer', 'AAAAAAAAAAAAAAAAAAAAAAAA');
-      });
-    });
+    const response = await CouchsurfingApiInstance.getHostsList(params);
+
+    res.send({  message: response.message });
+    return CouchsurfingApiInstance;
   },
 };

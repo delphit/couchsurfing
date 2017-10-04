@@ -1,4 +1,7 @@
 .header_title {
     color: white;
     font-size: 1.5rem;
-} 
+}
+#PlacesAutocomplete__autocomplete-container {
+    z-index: 222;
+}

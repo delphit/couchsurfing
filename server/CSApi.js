@@ -1,10 +1,12 @@
 const crypto = require('crypto');
 const utf8 = require('utf8');
 const axios = require('axios');
-const io = require('socket.io')();
+
+const User = require('./models/User');
 
 const CS_URL = 'https://hapi.couchsurfing.com';
 const PRIVATE_KEY = 'v3#!R3v44y3ZsJykkb$E@CG#XreXeGCh';
+
 
 class CouchsurfingAPI {
   constructor(username, password, userID, accessToken) {
@@ -20,6 +22,9 @@ class CouchsurfingAPI {
     if (userID !== undefined && accessToken !== undefined) {
       this.userID = userID;
       this.accessToken = accessToken;
+    }
+    if (accessToken === undefined) {
+      console.log('UNAUTHORIZED!', accessToken)
     }
   }
 
@@ -58,20 +63,36 @@ class CouchsurfingAPI {
         data: JSON.stringify(loginPayload),
         headers: this.headers,
       })
-        .then(e => {
+        .then(async (e) => {
           const { sessionUser } = e.data;
           this.userID = sessionUser.id;
           this.accessToken = sessionUser.accessToken;
           this.loggedIn = true;
+          const getUserProfile = await this.getSelfProfile();
+          const createUser = new User({
+            username: this.username,
+            password: this.password,
+            userID: sessionUser.id,
+            accessToken: sessionUser.accessToken,
+            avatarUrl: getUserProfile.avatarUrl,
+            name: getUserProfile.publicName,
+            isVerified: getUserProfile.isVerified
+          });
+          createUser.save((err) => {
+            if (err) {
+              console.log('Error when we save user', err);
+            }
+          });
+
           return {
             status: 200,
             message: 'User successfully logged in',
           };
         })
-        .catch(() => {
+        .catch((e) => {
           return {
             status: 301,
-            message: 'Wrong password',
+            message: `Wrong password ${e}`,
           };
         });
     } else {
@@ -79,7 +100,7 @@ class CouchsurfingAPI {
     }
   }
 
-  async apiRequest(path, method = 'get', data) {
+  async apiRequest(path) {
     const signature = CouchsurfingAPI._getUrlSignature(
       `${PRIVATE_KEY}.${this.userID}`,
       path,
@@ -91,17 +112,15 @@ class CouchsurfingAPI {
     });
 
     const dataResponse = await axios({
-      method,
+      method: 'get',
       url: `${CS_URL}${path}`,
       headers: this.headers,
-    }, data);
-
+    });
     return dataResponse.data;
   }
 
   getSelfProfile() {
     const path = `/api/v3/users/${this.userID}`;
-
     return this.apiRequest(path);
   }
 
@@ -124,10 +143,13 @@ class CouchsurfingAPI {
       message
     };
 
+    return this.apiRequest(path, "post", data);
+  }
 
-return 'a';
-
-    // return this.apiRequest(path, "post", data);
+  getHostsList(obj) {
+    const params = Object.keys(obj).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(obj[k])}`).join('&');
+    const path = `/api/v3.2/users/search?%s${params}`;
+    return this.apiRequest(path);
   }
 }
 

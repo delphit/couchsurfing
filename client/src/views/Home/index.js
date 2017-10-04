@@ -4,7 +4,7 @@ import { Layout } from 'antd';
 import LoginForm from './LoginForm';
 import './styles.css';
 
-const { Header, Content } = Layout;
+const { Header, Content, Sider } = Layout;
 
 const Home = () => (
   <Layout>
