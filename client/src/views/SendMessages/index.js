@@ -1,22 +1,18 @@
 import React from 'react';
-
-import { Form, Icon, Input, Button, notification, Avatar } from 'antd';
+import { Form, Icon, Input, Button, notification } from 'antd';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
-import PlacesAutocomplete from 'react-places-autocomplete';
 import './styles.css';
 
 const { Item: FormItem } = Form;
 
-class FindHost extends React.Component {
+class SendMessages extends React.Component {
   constructor() {
     super();
     this.state = {
       redirect: false,
       hosts: [],
-      address: 'San Francisco, CA',
     };
-    this.onChange = address => this.setState({ address });
   }
 
   handleSubmit = e => {
@@ -56,42 +52,31 @@ class FindHost extends React.Component {
   render() {
     const { redirect } = this.state;
     const { getFieldDecorator } = this.props.form;
-    const inputProps = {
-      value: this.state.address,
-      onChange: this.onChange,
-      placeholder: 'City',
-    };
-    {
-      console.log(this.state.hosts);
-    }
 
     return (
       <div>
         <Form onSubmit={this.handleSubmit} className="login-form">
           <FormItem>
-            <PlacesAutocomplete inputProps={inputProps} />
-          </FormItem>
-          <FormItem>
-            {getFieldDecorator('minGuestsWelcome', {
-              rules: [{ required: true, message: 'Please input min guests!' }],
+            {getFieldDecorator('title', {
+              rules: [{ required: true, message: 'Please input message title!' }],
             })(
               <Input
                 prefix={<Icon type="lock" style={{ fontSize: 13 }} />}
-                type="number"
-                placeholder="minGuestsWelcome"
+                type="text"
+                placeholder="Message title"
               />,
             )}
           </FormItem>
           <FormItem>
-            {getFieldDecorator('perPage', {
+            {getFieldDecorator('message', {
               rules: [
-                { required: true, message: 'Please input max hosts count!' },
+                { required: true, message: 'Please input message body!' },
               ],
             })(
               <Input
                 prefix={<Icon type="lock" style={{ fontSize: 13 }} />}
-                type="number"
-                placeholder="Count"
+                type="text"
+                placeholder="Message body"
               />,
             )}
           </FormItem>
@@ -101,28 +86,13 @@ class FindHost extends React.Component {
               htmlType="submit"
               className="login-form-button"
             >
-              Start
+              Start sending
             </Button>
           </FormItem>
         </Form>
-
-        {this.state.hosts.length
-          ? <div>
-              {this.state.hosts.map(e =>
-                <div>
-                  <Avatar size="large">
-                    {e.avatarUrl}
-                  </Avatar>
-                  <b>
-                    {e.publicName}
-                  </b>
-                </div>,
-              )}
-            </div>
-          : <p>Loading Hosts...</p>}
       </div>
     );
   }
 }
 
-export default Form.create()(FindHost);
+export default Form.create()(SendMessages);

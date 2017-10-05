@@ -1,7 +1,6 @@
 const CouchsurfingAPI = require('./CSApi');
 
 let CouchsurfingApiInstance;
-
 module.exports = {
   login: async function login(req, res) {
     const { username, password } = req.body;
@@ -18,7 +17,6 @@ module.exports = {
     res.send({ data });
     return CouchsurfingApiInstance;
   },
-
 
   getHostsList: async function getHostsList(req, res) {
     const { values, address} = req.body;
