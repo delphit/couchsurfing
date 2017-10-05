@@ -78,11 +78,11 @@ class CouchsurfingAPI {
             name: getUserProfile.publicName,
             isVerified: getUserProfile.isVerified
           });
-          createUser.save((err) => {
-            if (err) {
-              console.log('Error when we save user', err);
-            }
-          });
+          // createUser.save((err) => {
+          //   if (err) {
+          //     console.log('Error when we save user', err);
+          //   }
+          // });
 
           return {
             status: 200,
@@ -148,7 +148,7 @@ class CouchsurfingAPI {
 
   getHostsList(obj) {
     const params = Object.keys(obj).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(obj[k])}`).join('&');
-    const path = `/api/v3.2/users/search?%s${params}`;
+    const path = `/api/v3/users/search?${params}`;
     return this.apiRequest(path);
   }
 }

@@ -1,7 +1,7 @@
 const CouchsurfingAPI = require('./CSApi');
-const io = require('socket.io');
 
 let CouchsurfingApiInstance;
+
 module.exports = {
   login: async function login(req, res) {
     const { username, password } = req.body;
@@ -19,8 +19,9 @@ module.exports = {
     return CouchsurfingApiInstance;
   },
 
+
   getHostsList: async function getHostsList(req, res) {
-    const { address, minGuestsWelcome } = req.body;
+    const { values, address} = req.body;
     const params = {
       // page: 1,
       perPage: 25,
@@ -28,12 +29,9 @@ module.exports = {
       radius: 10,
       sort: 'best_match',
       couchStatus: 'yes,maybe',
-      minGuestsWelcome: minGuestsWelcome,
+      minGuestsWelcome: values.minGuestsWelcome,
     };
-
     const response = await CouchsurfingApiInstance.getHostsList(params);
-
-    res.send({  message: response.message });
-    return CouchsurfingApiInstance;
+    res.send({  message: response });
   },
 };

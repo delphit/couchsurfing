@@ -32,6 +32,7 @@ class LoginForm extends React.Component {
             this.setState({ redirect: true });
           })
           .catch((error) => {
+            console.log('error', error);
             notification.warn({
               message: 'Error - try again',
               description: error.response.data.message,

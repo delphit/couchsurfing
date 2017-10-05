@@ -10,7 +10,7 @@ router.get(apiURL, (req, res) => res.send('hello world'));
 
 router.post(`${apiURL}/login`, Controller.login);
 router.get(`${apiURL}/self`, Controller.getSelfProfile);
-router.get(`${apiURL}/hosts`, Controller.getHostsList);
+router.post(`${apiURL}/hosts`, Controller.getHostsList);
 
 
 module.exports = router;
