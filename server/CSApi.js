@@ -150,20 +150,12 @@ class CouchsurfingAPI {
   async getHostsList(obj) {
     const params = Object.keys(obj).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(obj[k])}`).join('&');
     const path = `/api/v3/users/search?${params}`;
-    return this.apiRequest(path);
-    // const createHost = new User({
-    //   id: String,
-    //   avatarUrl: String,
-    //   isVerified: Boolean,
-    //   responseRate: String,
-    //   positiveReferenceCount: String,
-    //   negativeReferenceCount: String,
-    // });
-    // createUser.save((err) => {
-    //   if (err) {
-    //     console.log('Error when we save user', err);
-    //   }
-    // });
+    console.log(obj);
+    const response = await this.apiRequest(path);
+    Hosts.remove({}, () => {
+      Hosts.insertMany(response.results);
+    });
+    return response;
   }
 }
 

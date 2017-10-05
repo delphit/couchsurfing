@@ -5,3 +5,6 @@
 #PlacesAutocomplete__autocomplete-container {
     z-index: 222;
 }
+.DateRangePickerInput, .DateRangePicker {
+    width: 100%;
+}

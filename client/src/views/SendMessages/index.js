@@ -1,9 +1,10 @@
 import React from 'react';
-import { Form, Icon, Input, Button, notification } from 'antd';
+import { Form, Icon, Input, Button, notification, Layout} from 'antd';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import './styles.css';
 
+const { Header } = Layout;
 const { Item: FormItem } = Form;
 
 class SendMessages extends React.Component {
@@ -55,6 +56,7 @@ class SendMessages extends React.Component {
 
     return (
       <div>
+        <Header className="header_title">Send messages</Header>
         <Form onSubmit={this.handleSubmit} className="login-form">
           <FormItem>
             {getFieldDecorator('title', {

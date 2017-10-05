@@ -19,7 +19,7 @@ module.exports = {
   },
 
   getHostsList: async function getHostsList(req, res) {
-    const { values, address} = req.body;
+    const { values, address, startDate, endDate } = req.body;
     const params = {
       perPage: values.perPage,
       placeDescription: address,
@@ -27,8 +27,11 @@ module.exports = {
       sort: 'best_match',
       couchStatus: 'yes,maybe',
       minGuestsWelcome: values.minGuestsWelcome,
+      fromDate: startDate,
+      toDate: endDate,
+      lastActivity: 'lastWeek'
     };
     const response = await CouchsurfingApiInstance.getHostsList(params);
-    res.send({  message: response });
+    res.send({ message: response });
   },
 };
