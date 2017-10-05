@@ -6,7 +6,6 @@ import SendMessages from './views/SendMessages';
 import Home from './views/Home';
 
 class App extends Component {
-
   render() {
     return (
       <Router>

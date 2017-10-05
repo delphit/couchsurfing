@@ -5,3 +5,7 @@
 #PlacesAutocomplete__autocomplete-container {
     z-index: 222;
 }
+.ant-steps {
+    width: 80%;
+    margin: 0 auto;
+}

@@ -13,6 +13,4 @@ router.get(`${apiURL}/self`, Controller.getSelfProfile);
 router.post(`${apiURL}/hosts`, Controller.getHostsList);
 router.post(`${apiURL}/send`, Controller.sendBookingRequests);
 
-
-
 module.exports = router;

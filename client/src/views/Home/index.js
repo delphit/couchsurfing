@@ -8,7 +8,7 @@ const { Header, Content, Sider } = Layout;
 
 const Home = () => (
   <Layout>
-    <Header className="header_title">Couchsurfing App</Header>
+    <Header className="header_title">Couchsurfing BotApp</Header>
     <Content>
       <LoginForm />
     </Content>

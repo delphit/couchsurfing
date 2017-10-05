@@ -1,11 +1,11 @@
 import React from 'react';
-import { Form, Icon, Input, Button, notification, Layout, Steps } from 'antd';
+import { Button, Form, Icon, Input, Layout, notification, Steps } from 'antd';
 import { DateRangePicker } from 'react-dates';
-import * as shallowCompare from 'react-addons-shallow-compare';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import moment from 'moment';
 import PlacesAutocomplete from 'react-places-autocomplete';
+import * as shallowCompare from 'react-addons-shallow-compare';
 import 'react-dates/lib/css/_datepicker.css';
 import './styles.css';
 

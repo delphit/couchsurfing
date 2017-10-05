@@ -1,18 +1,8 @@
 import React from 'react';
-import {
-  Form,
-  Icon,
-  Input,
-  Button,
-  notification,
-  Layout,
-  Steps,
-  Tooltip,
-} from 'antd';
+import { Button, Form, Icon, Input, Layout, notification, Steps } from 'antd';
 import { DateRangePicker } from 'react-dates';
-import moment from 'moment';
 import * as shallowCompare from 'react-addons-shallow-compare';
-import { Redirect } from 'react-router-dom';
+import moment from 'moment';
 import axios from 'axios';
 import './styles.css';
 
@@ -40,13 +30,14 @@ class SendMessages extends React.Component {
     debugger;
     this.props.form.validateFields((err, values) => {
       if (!err) {
+        this.setState({ status: 'wait', step: 1 });
         axios
           .post('/csfilter/api/send', {
             values,
             startDate: moment(this.state.startDate).format('YYYY-MM-DD'),
             endDate: moment(this.state.endDate).format('YYYY-MM-DD'),
           })
-          .then(response => {
+          .then(() => {
             notification.success({
               message: 'Success',
               style: {
@@ -56,7 +47,7 @@ class SendMessages extends React.Component {
             });
             this.setState({ status: 'finish', step: 2 });
           })
-          .catch(error => {
+          .catch(() => {
             this.setState({ status: 'error' });
             notification.warn({
               message: 'Error - try again',
@@ -66,14 +57,14 @@ class SendMessages extends React.Component {
               },
             });
           });
+      } else {
+        this.setState({ status: 'error', step: 1 });
       }
     });
   };
 
   render() {
-    const { redirect } = this.state;
     const { getFieldDecorator } = this.props.form;
-
     return (
       <div>
         <Header className="header_title">Send messages</Header>
@@ -96,9 +87,7 @@ class SendMessages extends React.Component {
               rules: [
                 { required: true, message: 'Please input message body!' },
               ],
-            })(
-                <TextArea rows={4} placeholder="Message body" />
-            )}
+            })(<TextArea rows={4} placeholder="Message body" />)}
           </FormItem>
           <FormItem>
             <DateRangePicker
