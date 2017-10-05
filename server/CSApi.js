@@ -3,6 +3,7 @@ const utf8 = require('utf8');
 const axios = require('axios');
 
 const User = require('./models/User');
+const Hosts = require('./models/Hosts');
 
 const CS_URL = 'https://hapi.couchsurfing.com';
 const PRIVATE_KEY = 'v3#!R3v44y3ZsJykkb$E@CG#XreXeGCh';
@@ -146,16 +147,24 @@ class CouchsurfingAPI {
     return this.apiRequest(path, "post", data);
   }
 
-  getHostsList(obj) {
+  async getHostsList(obj) {
     const params = Object.keys(obj).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(obj[k])}`).join('&');
     const path = `/api/v3/users/search?${params}`;
     return this.apiRequest(path);
+    // const createHost = new User({
+    //   id: String,
+    //   avatarUrl: String,
+    //   isVerified: Boolean,
+    //   responseRate: String,
+    //   positiveReferenceCount: String,
+    //   negativeReferenceCount: String,
+    // });
+    // createUser.save((err) => {
+    //   if (err) {
+    //     console.log('Error when we save user', err);
+    //   }
+    // });
   }
-}
-
-async function test() {
-  const API = new CouchsurfingAPI('nzoakhvi@sharklasers.com', 'qwerty');
-  await API._login();
 }
 
 module.exports = CouchsurfingAPI;

@@ -5,6 +5,7 @@ const HostsSchema = new mongoose.Schema({
   avatarUrl: String,
   isVerified: Boolean,
   responseRate: String,
+  daysSinceLastActivity: Number,
   positiveReferenceCount: String,
   negativeReferenceCount: String,
 });

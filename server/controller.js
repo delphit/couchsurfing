@@ -23,8 +23,7 @@ module.exports = {
   getHostsList: async function getHostsList(req, res) {
     const { values, address} = req.body;
     const params = {
-      // page: 1,
-      perPage: 25,
+      perPage: values.perPage,
       placeDescription: address,
       radius: 10,
       sort: 'best_match',
