@@ -1,10 +1,24 @@
 import React from 'react';
-import { Form, Icon, Input, Button, notification, Layout} from 'antd';
+import {
+  Form,
+  Icon,
+  Input,
+  Button,
+  notification,
+  Layout,
+  Steps,
+  Tooltip,
+} from 'antd';
+import { DateRangePicker } from 'react-dates';
+import moment from 'moment';
+import * as shallowCompare from 'react-addons-shallow-compare';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import './styles.css';
 
 const { Header } = Layout;
+const { TextArea } = Input;
+const { Step } = Steps;
 const { Item: FormItem } = Form;
 
 class SendMessages extends React.Component {
@@ -13,17 +27,24 @@ class SendMessages extends React.Component {
     this.state = {
       redirect: false,
       hosts: [],
+      status: 'process',
+      step: 0,
+      startDate: null,
+      endDate: null,
+      focusedInput: null,
     };
   }
 
   handleSubmit = e => {
     e.preventDefault();
+    debugger;
     this.props.form.validateFields((err, values) => {
       if (!err) {
         axios
-          .post('/csfilter/api/hosts', {
+          .post('/csfilter/api/send', {
             values,
-            address: this.state.address,
+            startDate: moment(this.state.startDate).format('YYYY-MM-DD'),
+            endDate: moment(this.state.endDate).format('YYYY-MM-DD'),
           })
           .then(response => {
             notification.success({
@@ -33,13 +54,12 @@ class SendMessages extends React.Component {
                 marginLeft: 335 - 300,
               },
             });
-            this.setState({ hosts: response.data.message });
+            this.setState({ status: 'finish', step: 2 });
           })
           .catch(error => {
-            console.log('error', error);
+            this.setState({ status: 'error' });
             notification.warn({
               message: 'Error - try again',
-              description: error.response.data.message,
               style: {
                 width: 300,
                 marginLeft: 335 - 300,
@@ -59,13 +79,15 @@ class SendMessages extends React.Component {
         <Header className="header_title">Send messages</Header>
         <Form onSubmit={this.handleSubmit} className="login-form">
           <FormItem>
-            {getFieldDecorator('title', {
-              rules: [{ required: true, message: 'Please input message title!' }],
+            {getFieldDecorator('numberOfSurfers', {
+              rules: [
+                { required: true, message: 'Please input number of Surfers!' },
+              ],
             })(
               <Input
                 prefix={<Icon type="lock" style={{ fontSize: 13 }} />}
-                type="text"
-                placeholder="Message title"
+                type="number"
+                placeholder="Number of Surfers"
               />,
             )}
           </FormItem>
@@ -75,12 +97,18 @@ class SendMessages extends React.Component {
                 { required: true, message: 'Please input message body!' },
               ],
             })(
-              <Input
-                prefix={<Icon type="lock" style={{ fontSize: 13 }} />}
-                type="text"
-                placeholder="Message body"
-              />,
+                <TextArea rows={4} placeholder="Message body" />
             )}
+          </FormItem>
+          <FormItem>
+            <DateRangePicker
+              startDate={this.state.startDate}
+              endDate={this.state.endDate}
+              onDatesChange={({ startDate, endDate }) =>
+                this.setState({ startDate, endDate })}
+              focusedInput={this.state.focusedInput}
+              onFocusChange={focusedInput => this.setState({ focusedInput })}
+            />
           </FormItem>
           <FormItem>
             <Button
@@ -92,6 +120,11 @@ class SendMessages extends React.Component {
             </Button>
           </FormItem>
         </Form>
+        <Steps current={this.state.step} status={this.state.error}>
+          <Step title="Start" description="Please fill all fields" />
+          <Step title="In Process" description="Wait! We are send messages" />
+          <Step title="Finished" description="Check result :)" />
+        </Steps>
       </div>
     );
   }

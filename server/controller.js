@@ -29,9 +29,14 @@ module.exports = {
       minGuestsWelcome: values.minGuestsWelcome,
       fromDate: startDate,
       toDate: endDate,
-      lastActivity: 'lastWeek'
+      lastActivity: 'lastWeek',
     };
     const response = await CouchsurfingApiInstance.getHostsList(params);
+    res.send({ message: response });
+  },
+  sendBookingRequests: async function sendBookingRequests(req, res) {
+    const { values, startDate, endDate } = req.body;
+    const response = await CouchsurfingApiInstance.sendBookingRequests({ values, startDate, endDate });
     res.send({ message: response });
   },
 };

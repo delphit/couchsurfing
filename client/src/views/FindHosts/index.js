@@ -76,6 +76,9 @@ class FindHost extends React.Component {
       onChange: this.onChange,
       placeholder: 'City',
     };
+    if (redirect) {
+      return <Redirect to="/send" />;
+    }
     return (
       <div>
         <Header className="header_title">Get hosts</Header>
@@ -90,7 +93,7 @@ class FindHost extends React.Component {
               <Input
                 prefix={<Icon type="lock" style={{ fontSize: 13 }} />}
                 type="number"
-                placeholder="minGuestsWelcome"
+                placeholder="Minimum guests welcome"
               />,
             )}
           </FormItem>
@@ -132,8 +135,9 @@ class FindHost extends React.Component {
               <Button
                 type="primary"
                 className="login-form-button"
+                onClick={() => this.setState({ redirect: true })}
               >
-                Go to the next step<Icon type="right" />
+                Go to the next step <Icon type="right" />
               </Button>
             </FormItem>}
         </Form>
